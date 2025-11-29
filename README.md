@@ -1,59 +1,142 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Food Blog - Laravel Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web food blog yang dibangun menggunakan Laravel dengan fitur CRUD untuk admin.
 
-## About Laravel
+## Fitur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **User Authentication**: Login dan registrasi untuk user
+- **Role-based Access**: Admin dan User dengan akses berbeda
+- **CRUD Operations**: Admin dapat melakukan Create, Read, Update, Delete untuk:
+  - Tempat Makan
+  - Menu Makanan
+- **Kategori Makanan**: 
+  - Makanan Berat
+  - Jajanan
+  - Minuman
+  - Frozen Food
+- **Search Functionality**: Pencarian makanan berdasarkan nama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP >= 8.2
+- Composer
+- MySQL
+- Node.js & NPM (untuk asset compilation)
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+1. Clone atau extract project ke folder yang diinginkan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. Install dependencies:
+```bash
+composer install
+```
 
-## Laravel Sponsors
+3. Copy file `.env.example` menjadi `.env`:
+```bash
+copy .env.example .env
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. Generate application key:
+```bash
+php artisan key:generate
+```
 
-### Premium Partners
+5. Konfigurasi database di file `.env`:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=food_blog
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+6. Jalankan migrations:
+```bash
+php artisan migrate
+```
 
-## Contributing
+7. Jalankan seeder untuk membuat admin user:
+```bash
+php artisan db:seed --class=AdminSeeder
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+8. Buat symbolic link untuk storage:
+```bash
+php artisan storage:link
+```
 
-## Code of Conduct
+9. Copy assets dari folder `../assets` ke `public/assets`:
+   - Salin semua file dari folder `assets` ke `public/assets`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+10. Jalankan development server:
+```bash
+php artisan serve
+```
 
-## Security Vulnerabilities
+## Default Admin Credentials
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Email**: admin@foodblog.com
+- **Password**: admin123
 
-## License
+## Struktur Database
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Users
+- id (primary key)
+- username (unique)
+- name
+- email (unique)
+- password
+- role (user/admin)
+- timestamps
+
+### Tempat Makan
+- idTempat (primary key)
+- namaTempat
+- alamat
+- kategori
+- deskripsi
+- gambar
+- timestamps
+
+### Makanan
+- idMakanan (primary key)
+- idTempat (foreign key)
+- namaMenu
+- harga
+- deskripsi
+- kategori
+- gambar
+- timestamps
+
+## Routes
+
+### Public Routes
+- `/` - Home page
+- `/about` - About us page
+- `/login` - Login page
+- `/register` - Registration page
+- `/makanan-berat` - Makanan berat category
+- `/jajanan` - Jajanan category
+- `/minuman` - Minuman category
+- `/frozen-food` - Frozen food category
+- `/makanan/{id}` - Detail makanan
+
+### Authenticated Routes
+- `/profile` - User profile
+
+### Admin Routes
+- `/admin/dashboard` - Admin dashboard
+- `/admin/tempat-makan` - List tempat makan
+- `/admin/tempat-makan/create` - Create tempat makan
+- `/admin/tempat-makan/{id}/edit` - Edit tempat makan
+- `/admin/makanan` - List makanan
+- `/admin/makanan/create` - Create makanan
+- `/admin/makanan/{id}/edit` - Edit makanan
+
+## Notes
+
+- Pastikan folder `storage/app/public` memiliki permission yang sesuai
+- Pastikan folder `public/assets` berisi semua file assets
+- Untuk production, pastikan `APP_DEBUG=false` di file `.env`
