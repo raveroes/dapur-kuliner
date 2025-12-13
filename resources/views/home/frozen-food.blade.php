@@ -232,6 +232,87 @@
         margin-bottom: 1rem;
         opacity: 0.5;
     }
+    
+    .tempat-makan-section {
+        margin-top: 4rem;
+        padding-top: 3rem;
+        border-top: 2px solid rgba(212, 175, 55, 0.3);
+    }
+    
+    .tempat-makan-section h2 {
+        font-family: 'Nomark', sans-serif;
+        font-size: 2.5rem;
+        color: #D4AF37;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .tempat-makan-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    
+    .tempat-makan-card {
+        background: rgba(30, 30, 30, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+    }
+    
+    .tempat-makan-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: #D4AF37;
+        box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+        background: rgba(40, 40, 40, 0.8);
+    }
+    
+    .tempat-makan-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .tempat-makan-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(212, 175, 55, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #D4AF37;
+        font-size: 1.5rem;
+    }
+    
+    .tempat-makan-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+    
+    .tempat-makan-address {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .tempat-makan-address i {
+        color: #D4AF37;
+    }
+    
+    .tempat-makan-menu-count {
+        font-size: 0.9rem;
+        color: rgba(212, 175, 55, 0.8);
+        font-weight: 500;
+    }
 </style>
 @endsection
 
@@ -311,6 +392,42 @@
                 <p>Tidak ada frozen food yang ditemukan.</p>
             </div>
         @endif
+        
+        @if(isset($tempatMakanList) && $tempatMakanList->count() > 0)
+        <div class="tempat-makan-section">
+            <h2>Daftar Tempat Makan</h2>
+            <div class="tempat-makan-grid">
+                @foreach($tempatMakanList as $tempat)
+                    <div class="tempat-makan-card" onclick="filterByTempat({{ $tempat->idTempat }})">
+                        <div class="tempat-makan-header">
+                            <div class="tempat-makan-icon">
+                                <i class="fas fa-store"></i>
+                            </div>
+                            <div class="tempat-makan-name">{{ $tempat->namaTempat }}</div>
+                        </div>
+                        <div class="tempat-makan-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ $tempat->alamat }}</span>
+                        </div>
+                        @if($tempat->makanan_count > 0)
+                        <div class="tempat-makan-menu-count">
+                            {{ $tempat->makanan_count }} menu tersedia
+                        </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
     </div>
 </div>
+
+<script>
+    function filterByTempat(idTempat) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('tempat', idTempat);
+        window.location.href = url.toString();
+    }
+</script>
+
 @endsection

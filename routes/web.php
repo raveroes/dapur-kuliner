@@ -27,6 +27,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Authenticated user routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [HomeController::class, 'updateProfile'])->name('profile.update');
     Route::post('/makanan/{id}/rating', [\App\Http\Controllers\RatingController::class, 'store'])->name('makanan.rating');
 });
 
